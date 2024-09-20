@@ -12,17 +12,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Flickr"
         tools:targetApi="31">
+
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
+
+        <activity android:name=".MainActivity" />
         <activity android:name=".NewsActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".ForgetPassActivity" />
+        <activity android:name=".DienMaActivity" />
+        <activity android:name=".DienLaiPassActivity" />
+
+
     </application>
 
 </manifest>
