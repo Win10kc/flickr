@@ -1,12 +1,14 @@
 package com.example.flickr;
 
-import com.example.flickr.model.User;
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.flickr.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = new User("", "", "", "gmail.com", "", "default_avatar.png");
+                User user = new User("Hoang", "Ky Duyen", "01/01/2003", "johndoe@gmail.com", "password", "default_avatar.png");
 
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
