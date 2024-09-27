@@ -1,4 +1,3 @@
-<<<<<<< HEAD:Flickr/app/src/main/res/layout/fragment_menu.xml
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,53 +20,3 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-=======
-<?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".fragment.MenuFragment">
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        app:srcCompat="@drawable/anhflickr1" />
-
-    <ImageView
-        android:id="@+id/btnSignOut"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginLeft="375dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/ic_signout" />
-
-
-    <TextView
-        android:id="@+id/textNameProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:textColor="@color/white"
-        android:layout_marginTop="170dp"
-        android:id="@+id/txtCoutFollow"
-        android:textSize="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:gravity="center"
-        android:textStyle="bold"/>
-
-
-</RelativeLayout>
->>>>>>> origin/BI11-183:app/src/main/res/layout/fragment_menu.xml
