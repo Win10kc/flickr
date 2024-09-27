@@ -2,17 +2,29 @@
 
     <item
         android:id="@+id/navigation_news"
+<<<<<<< HEAD:Flickr/app/src/main/res/menu/bottom_navigation_menu.xml
         android:icon="@drawable/ic_news"
+=======
+        android:icon="@drawable/baseline_home_24"
+>>>>>>> origin/BI11-183:app/src/main/res/menu/bottom_navigation_menu.xml
         android:title="News" />
 
     <item
         android:id="@+id/navigation_search"
+<<<<<<< HEAD:Flickr/app/src/main/res/menu/bottom_navigation_menu.xml
         android:icon="@drawable/ic_search"
+=======
+        android:icon="@drawable/baseline_search_24"
+>>>>>>> origin/BI11-183:app/src/main/res/menu/bottom_navigation_menu.xml
         android:title="Search" />
 
     <item
         android:id="@+id/navigation_menu"
+<<<<<<< HEAD:Flickr/app/src/main/res/menu/bottom_navigation_menu.xml
         android:icon="@drawable/ic_menu"
+=======
+        android:icon="@drawable/baseline_menu_24"
+>>>>>>> origin/BI11-183:app/src/main/res/menu/bottom_navigation_menu.xml
         android:title="Menu" />
 
 </menu>

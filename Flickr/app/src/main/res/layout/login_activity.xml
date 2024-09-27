@@ -126,7 +126,11 @@
         android:background="#FF000000"
         android:text="Not a Flickr member? Sign up!"
         android:textAllCaps="false"
+<<<<<<< HEAD:Flickr/app/src/main/res/layout/login_activity.xml
         android:textColor="#795548"
+=======
+        android:textColor="#FF000000"
+>>>>>>> origin/BI11-183:app/src/main/res/layout/login_activity.xml
         android:textSize="20dp" />
 
 </RelativeLayout>
