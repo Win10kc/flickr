@@ -50,10 +50,8 @@ dependencies {
     implementation (libs.circleimageview)
     implementation(libs.glide)
     implementation(kotlin("script-runtime"))
-//    implementation(libs.android.image.cropper)
+    implementation("com.vanniktech:android-image-cropper:4.6.0")
 
-
-    implementation (libs.edmodo.android.image.cropper)
 }
 
 
