@@ -1,4 +1,5 @@
 package vn.edu.usth.flickr1;
+
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -11,18 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.canhub.cropper.CropImage;
-import com.canhub.cropper.CropImageActivity;
-
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -43,7 +36,7 @@ public class PostActivity extends AppCompatActivity {
     StorageTask uploadTask;
     StorageReference storageReference;
 
-    ImageView close,image_added;
+    ImageView close, image_added;
     TextView post;
     EditText description;
 
@@ -58,92 +51,118 @@ public class PostActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
 
         storageReference = FirebaseStorage.getInstance().getReference("posts");
+
+        // Close the post activity
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(PostActivity.this,MainActivity.class));
+                startActivity(new Intent(PostActivity.this, MainActivity.class));
                 finish();
             }
         });
+
+        // Start image selection when user clicks on image_added ImageView
+        image_added.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openImagePicker();
+            }
+        });
+
+        // Upload the post when user clicks the post button
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uploadImage();
+                if (imageUri != null) {
+                    uploadImage();
+                } else {
+                    Toast.makeText(PostActivity.this, "No Image Selected!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-        CropImage.activity(imageUri)
-                .setAspectRatio(1, 1)
-                .start(PostActivity.this);
     }
-    private String getFileExtension(Uri uri){
-        ContentResolver  contentResolver = getContentResolver();
+
+    // Open the image picker to select an image from the gallery
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, 1000); // 1000 is the request code
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1000 && resultCode == RESULT_OK && data != null) {
+            imageUri = data.getData();  // Get the selected image URI
+            image_added.setImageURI(imageUri); // Display the selected image in ImageView
+        } else {
+            Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Get the file extension from the URI
+    private String getFileExtension(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    private void uploadImage(){
+    // Upload the image to Firebase Storage
+    private void uploadImage() {
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Posting");
         progressDialog.show();
-        if(imageUri != null ){
-            StorageReference filerefrence = storageReference.child(System.currentTimeMillis()+"."
-                    + getFileExtension(imageUri));
-            uploadTask = filerefrence.putFile(imageUri);
-            uploadTask.continueWithTask(new Continuation() {
+
+        if (imageUri != null) {
+            StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+            uploadTask = fileReference.putFile(imageUri);
+
+            uploadTask.continueWithTask(new Continuation<Task<Uri>, Task<Uri>>() {
                 @Override
-                public Object then(@NonNull Task task) throws Exception {
-                    if (!task.isSuccessful()){
+                public Task<Uri> then(@NonNull Task<Task<Uri>> task) throws Exception {
+                    if (!task.isSuccessful()) {
                         throw task.getException();
                     }
-                    return filerefrence.getDownloadUrl();
+                    return fileReference.getDownloadUrl();
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
                         myUrl = downloadUri.toString();
 
+                        // Save post details to Firebase Database
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
-                        String postid = reference.push().getKey();
-                        HashMap<String,Object> hashMap = new HashMap<>();
-                        hashMap.put("postid",postid);
-                        hashMap.put("postimage",myUrl);
-                        hashMap.put("description",description.getText().toString());
+                        String postId = reference.push().getKey();
+
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("postid", postId);
+                        hashMap.put("postimage", myUrl);
+                        hashMap.put("description", description.getText().toString());
                         hashMap.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                        reference.child(postid).setValue(hashMap);
+                        reference.child(postId).setValue(hashMap);
                         progressDialog.dismiss();
 
-                        startActivity(new Intent(PostActivity.this,MainActivity.class));
+                        startActivity(new Intent(PostActivity.this, MainActivity.class));
                         finish();
                     } else {
+                        progressDialog.dismiss();
                         Toast.makeText(PostActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(PostActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    Toast.makeText(PostActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-        }else {
-            Toast.makeText(this, "No Image Selected!", Toast.LENGTH_SHORT).show();
-        }
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE && resultCode == RESULT_OK){
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            imageUri = result.getUriContent();
-
-            image_added.setImageURI(imageUri);
         } else {
-            Toast.makeText(this, "Something gone wrong!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(PostActivity.this,MainActivity.class));
-            finish();
+            progressDialog.dismiss();
+            Toast.makeText(this, "No Image Selected!", Toast.LENGTH_SHORT).show();
         }
     }
 }
