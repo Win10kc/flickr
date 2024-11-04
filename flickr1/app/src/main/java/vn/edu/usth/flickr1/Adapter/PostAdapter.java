@@ -59,6 +59,22 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         isLikes(post.getPostid(),viewHolder.like);
         nrLikes(viewHolder.likes,post.getPostid());
         getComments(post.getPostid(),viewHolder.comments);
+        isSave(post.getPostid(), viewHolder.save);
+
+        viewHolder.save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (viewHolder.save.getTag().equals("save")){
+                    FirebaseDatabase.getInstance().getReference().child("save").child(firebaseUser.getUid())
+                    .child(post.getPostid()).setValue(true);
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("save").child(firebaseUser.getUid())
+                            .child(post.getPostid()).removeValue();
+
+                }
+            }
+        });
+
 
 
         viewHolder.like.setOnClickListener(new View.OnClickListener() {
@@ -189,4 +205,31 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             }
         });
     }
+
+
+    private  void isSave(String postid, ImageView imageView){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Save")
+                .child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child(postid).exists()) {
+                    imageView.setImageResource(R.drawable.ic_save_black);
+                    imageView.setTag("saves");
+
+                } else {
+                    imageView.setImageResource(R.drawable.ic_savee_black);
+                    imageView.setTag("save");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }
