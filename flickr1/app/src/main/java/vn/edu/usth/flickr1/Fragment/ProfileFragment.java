@@ -1,6 +1,7 @@
 package vn.edu.usth.flickr1.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -33,6 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 import vn.edu.usth.flickr1.Adapter.MyfotoAdapter;
+import vn.edu.usth.flickr1.EditProfileActivity;
 import vn.edu.usth.flickr1.Model.Post;
 import vn.edu.usth.flickr1.Model.User;
 import vn.edu.usth.flickr1.R;
@@ -101,6 +103,7 @@ public class ProfileFragment extends Fragment {
         getFollowers();
         getNrPosts();
         myFotos();
+        mysaves();
 
         if (profileid.equals(firebaseUser.getUid())) {
             edit_profile.setText("Edit Profile");
@@ -115,6 +118,7 @@ public class ProfileFragment extends Fragment {
                 String btn = edit_profile.getText().toString();
 
                 if (btn.equals("Edit Profile")) {
+                    startActivity(new Intent(getContext(), EditProfileActivity.class));
 
                 } else if (btn.equals("Follow")) {
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
