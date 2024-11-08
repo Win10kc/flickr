@@ -1,6 +1,6 @@
 package vn.edu.usth.flickr1.Adapter;
 
-import android.app.Notification;
+import vn.edu.usth.flickr1.Model.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -49,7 +49,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Notification notification = mNotification.get(i);
 
-        viewHolder.text.setText(notification.getSettingsText());
+        viewHolder.text.setText(notification.getText());
 
         getUserInfo(viewHolder.image_profile,viewHolder.username,notification.getUserid());
 
