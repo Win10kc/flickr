@@ -51,6 +51,8 @@ dependencies {
     implementation(libs.glide)
     implementation(kotlin("script-runtime"))
     implementation("com.vanniktech:android-image-cropper:4.6.0")
+    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
+
 
 }
 
