@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,9 +32,6 @@ public class HomeFragment extends Fragment {
     private List<Post> postLists;
 
     private List<String> followingList;
-
-    ProgressBar progressBar;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,8 +46,6 @@ public class HomeFragment extends Fragment {
         postLists = new ArrayList<>();
         postAdapter = new PostAdapter(getContext(),postLists);
         recyclerView.setAdapter(postAdapter);
-
-        progressBar = view.findViewById(R.id.progress_circular);
 
         checkFollowing();
         return view;
@@ -98,7 +92,6 @@ public class HomeFragment extends Fragment {
                     }
                 }
                 postAdapter.notifyDataSetChanged();
-                progressBar.setVisibility(View.GONE);
             }
 
             @Override
