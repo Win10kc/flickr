@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 import vn.edu.usth.flickr1.CommentsActivity;
@@ -59,6 +60,22 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         isLikes(post.getPostid(),viewHolder.like);
         nrLikes(viewHolder.likes,post.getPostid());
         getComments(post.getPostid(),viewHolder.comments);
+        isSave(post.getPostid(), viewHolder.save);
+
+        viewHolder.save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (viewHolder.save.getTag().equals("save")){
+                    FirebaseDatabase.getInstance().getReference().child("save").child(firebaseUser.getUid())
+                    .child(post.getPostid()).setValue(true);
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("save").child(firebaseUser.getUid())
+                            .child(post.getPostid()).removeValue();
+
+                }
+            }
+        });
+
 
 
         viewHolder.like.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +84,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 if (viewHolder.like.getTag().equals("like")){
                     FirebaseDatabase.getInstance().getReference().child("Likes").child(post.getPostid())
                             .child(firebaseUser.getUid()).setValue(true);
+                    addNotifications(post.getPublisher(),post.getPostid());
                 }
                 else {
                     FirebaseDatabase.getInstance().getReference().child("Likes").child(post.getPostid())
@@ -155,6 +173,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         });
 
     }
+    private void addNotifications(String userid, String postid){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userid",firebaseUser.getUid());
+        hashMap.put("text","liked your post");
+        hashMap.put("postid",postid);
+        hashMap.put("ispost",true);
+
+        reference.push().setValue(hashMap);
+    }
     private void nrLikes(TextView likes, String postid){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Likes")
                 .child(postid);
@@ -189,4 +218,31 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             }
         });
     }
+
+
+    private  void isSave(String postid, ImageView imageView){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Save")
+                .child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child(postid).exists()) {
+                    imageView.setImageResource(R.drawable.ic_save_black);
+                    imageView.setTag("saves");
+
+                } else {
+                    imageView.setImageResource(R.drawable.ic_savee_black);
+                    imageView.setTag("save");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }
